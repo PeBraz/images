@@ -1,5 +1,4 @@
 const path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
   entry: './main.js',
@@ -9,7 +8,14 @@ module.exports = {
   },
   devServer: {
     inline: true,
-    port: 8001
+    port: 3000,
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3100',
+        pathRewrite: {'^/api' : ''},
+        changeOrigin: true,
+      },
+    },
   },
   module: {
     rules: [
@@ -29,9 +35,4 @@ module.exports = {
       }
     ]
   },
-  plugins: [
-    new HtmlWebpackPlugin({
-      template: './public/index.html'
-    })
-  ]
-}
+};

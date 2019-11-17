@@ -2,8 +2,8 @@ import { parseString } from 'xml2js';
 import fs from 'fs';
 import betterSqlite3 from 'better-sqlite3';
 
-const db = betterSqlite3('./plants.db');
-const OUTPUT_FILE = './output/plants.xml'
+const db = betterSqlite3('./images.db');
+const OUTPUT_FILE = './output/images.xml'
 
 function parseContent(content, parentName = null) {
   const results = [];
@@ -21,7 +21,7 @@ function parseContent(content, parentName = null) {
   return results;
 }
 
-db.prepare('CREATE TABLE IF NOT EXISTS plants (name TEXT, size NUMBER)').run();
+db.prepare('CREATE TABLE IF NOT EXISTS images (name TEXT, size NUMBER)').run();
 
 const data = fs.readFileSync(OUTPUT_FILE, 'utf-8');
 parseString(data, (err, res) => {
@@ -31,7 +31,7 @@ parseString(data, (err, res) => {
   const startContent = Object.values(res)[0].synset[0];
   const all = parseContent(startContent);
 
-  const stmt = db.prepare('INSERT INTO plants VALUES (?, ?)')
+  const stmt = db.prepare('INSERT INTO images VALUES (?, ?)')
   db.transaction(values => {
     for (const {name, size} of values) {
       stmt.run(name, size);
